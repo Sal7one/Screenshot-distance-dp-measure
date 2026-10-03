@@ -1,0 +1,6 @@
+__pycache__/
+_site/
+*.zip
+.DS_Store
+*-measured.png
+*-measurement.json

@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-HWYdAVxnWuhpdxX04Ey9r032NiT4mFo80DxZW3QZztw='; style-src 'sha256-490ftX+XnmXbrvw6+sx7uXUQ31zIcnuhAe4CWahdxtk='; img-src data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#110e0c">
+  <meta name="description" content="A local screenshot ruler. Measure visible gaps in pixels and Android dp with explicit calibration.">
+  <title>Hearth · Screenshot ruler</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23ff7a3d'/%3E%3Cpath d='M18 18v28h28M18 25h8m-8 7h5m-5 7h8m6 7v-8m7 8v-5' fill='none' stroke='%23110e0c' stroke-width='4'/%3E%3C/svg%3E">
+  <style>:root{color-scheme:dark;--bg:#110e0c;--s1:#1a1613;--s2:#231e1a;--s3:#2e2722;--line:#3f3630;--text:#f7efe7;--muted:#cfc2b5;--dim:#a39588;--ember:#ff7a3d;--photo:#f5c04e;--video:#8e9bff;--ok:#53d3a2;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:14px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{display:inline-flex;justify-content:center;align-items:center;gap:8px;min-height:44px;padding:10px 14px;border:1px solid transparent;border-radius:12px;background:var(--s3);color:var(--text);cursor:pointer;transition:background 120ms ease,color 120ms ease}button:hover:not(:disabled){background:#45372d}button:disabled{opacity:.38;cursor:not-allowed}button:focus-visible,input:focus-visible,select:focus-visible,canvas:focus-visible,a:focus-visible{outline:2px solid var(--ember);outline-offset:3px}svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}.icon-defs{position:absolute;width:0;height:0;overflow:hidden}a{color:inherit}h1,h2,p{margin:0}.app-header{display:flex;align-items:center;gap:24px;padding:20px 36px;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-size:24px;font-weight:750;letter-spacing:-1px}.brand-mark{display:grid;place-items:center;width:44px;height:44px;background:var(--ember);color:#1b0c04;border-radius:14px}.brand-mark svg{width:25px;height:25px}.brand-sub{display:block;margin-top:3px;color:var(--dim);font-size:9px;letter-spacing:2px;font-weight:600}.privacy{display:flex;align-items:center;gap:8px;color:var(--dim);font-size:12px;margin-left:auto}.status-dot{width:6px;height:6px;border-radius:50%;background:var(--ok)}main{max-width:1600px;margin:0 auto;padding:32px 36px 22px}.intro{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:24px}.eyebrow{font-size:10px;letter-spacing:2px;font-weight:650;color:var(--dim)}h1{margin:6px 0 8px;font-size:36px;letter-spacing:-1.4px;line-height:1.15}.intro p{color:var(--muted);font-size:14px;line-height:1.5}.intro-note{display:flex;align-items:center;gap:9px;color:var(--dim);font-size:11px;flex-wrap:wrap}.number{font-family:ui-monospace,monospace;font-size:10px;padding:5px;background:var(--s2);border-radius:6px;color:var(--ember);margin-left:10px}.workspace{display:grid;grid-template-columns:minmax(0,1fr) 344px;gap:20px;align-items:start}.viewer{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--s1);position:sticky;top:16px}.viewer-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line)}.source-tabs,.viewer-actions,.view-toolbar,.zoom-controls{display:flex;align-items:center;gap:6px}.source{padding:8px 12px;background:transparent;color:var(--dim);font-weight:650}.source span{font-weight:400;font-size:12px}.source.active{background:var(--s3);color:var(--text)}.source.active:first-child{box-shadow:inset 0 -2px var(--photo)}.source.active:last-child{box-shadow:inset 0 -2px var(--video)}.quiet{background:transparent;color:var(--muted)}.small{font-size:12px;min-height:38px;padding:6px 9px}.primary{background:var(--ember);color:#1b0c04;font-weight:650;box-shadow:0 8px 28px #ff7a3d20}.primary:hover:not(:disabled){background:#ff955f}.outline{background:transparent;border-color:var(--line)}.text-button{background:transparent;color:var(--dim);font-size:12px;text-decoration:underline;text-underline-offset:4px}.view-toolbar{padding:10px 16px;justify-content:space-between}.segmented{display:flex;gap:2px;background:#110e0c;padding:4px;border-radius:12px}.segmented button{min-height:36px;background:transparent;padding:7px 12px;color:var(--dim);font-size:12px}.segmented button[aria-pressed=true]{background:var(--s3);color:var(--text)}.zoom-controls button{min-width:38px;min-height:36px;padding:6px 8px;background:transparent}.zoom-controls output{font-size:11px;font-family:ui-monospace,monospace;text-align:center;min-width:58px;color:var(--muted)}.canvas-area{position:relative;display:flex;height:clamp(430px,68vh,820px);background:#0c0a09;overflow:hidden;border-top:1px solid #ffffff08;border-bottom:1px solid #ffffff08}.canvas-pane{position:relative;flex:1;min-width:0;height:100%}.canvas-pane+ .canvas-pane{border-left:1px solid var(--line)}canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}.pane-label{position:absolute;top:12px;right:12px;background:#110e0cdd;border:1px solid var(--line);padding:6px 9px;border-radius:8px;pointer-events:none;font:12px ui-monospace,monospace}.viewer-footer{padding:12px 16px;display:flex;justify-content:space-between;gap:12px;font:10px ui-monospace,monospace;color:var(--dim)}.empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:30px;background:radial-gradient(ellipse at 50% 45%,#2c221a66,transparent 65%)}.empty-mark{border:1px solid var(--line);border-radius:22px;background:var(--s1);padding:18px;color:var(--ember);margin-bottom:22px}.empty-mark svg{width:28px;height:28px}.empty h2{font-size:24px;letter-spacing:-.7px}.empty p{color:var(--dim);font-size:13px;line-height:1.7;margin:12px 0 22px}.empty .primary{padding:12px 20px}.empty .text-button{margin-top:8px}.inspector{border:1px solid var(--line);border-radius:22px;background:var(--s1);overflow:hidden}.result-card{padding:22px 22px 20px;background:radial-gradient(ellipse at top right,#ff7a3d16,transparent 80%);border-bottom:1px solid var(--line)}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:16px}.section-heading h2{font-size:14px;font-weight:650;letter-spacing:-.2px}.source-chip{background:var(--s3);padding:4px 8px;border-radius:6px;color:var(--photo);font:11px ui-monospace,monospace}.result{display:flex;align-items:baseline;gap:10px;margin:10px 0 4px}.result output{font-size:48px;font-weight:600;letter-spacing:-2px;font-variant-numeric:tabular-nums;line-height:1.1}.result>span{font-size:18px;color:var(--ember)}.pixel-result{color:var(--muted);font:12px ui-monospace,monospace;line-height:1.6}.pixel-result>span{color:var(--dim);font-size:10px}.formula{font:11px ui-monospace,monospace;color:var(--dim);margin-top:16px;line-height:1.8;padding-top:14px;border-top:1px solid #ffffff0a;overflow-wrap:anywhere}.control-section{padding:22px;border-bottom:1px solid var(--line)}.control-section:last-child{border-bottom:0}.step-tag{color:var(--dim);font:10px ui-monospace,monospace}label{display:block;font-size:12px;color:var(--muted);margin:16px 0 8px;line-height:1.5}label>span:not(:first-child){color:var(--dim);float:right;font-size:11px}input[type=number],select{color:var(--text);background:#110e0c;border:1px solid var(--line);border-radius:10px;min-height:44px;padding:10px 12px;width:100%;min-width:0}select{font-size:12px;padding-right:6px}input[type=number]{font-family:ui-monospace,monospace;font-size:15px}input::placeholder{color:#74685f;font-size:13px}.help{margin-top:9px;color:var(--dim);font-size:11px;line-height:1.65}.caution{color:var(--photo)}.checkbox{display:flex;align-items:center;gap:10px;margin-top:14px}.checkbox input{accent-color:var(--ember);width:18px;height:18px}.checkbox span{float:none!important;color:var(--muted)!important;font-size:12px!important}.calibration-state{color:var(--ok);font:10px ui-monospace,monospace;line-height:1.7;margin-top:14px}.calibration-state.invalid{color:var(--photo)}.full{width:100%}.segmented.full button{flex:1;padding:7px 4px;font-size:11px}.guide-row{display:grid;grid-template-columns:22px 1fr 65px;gap:8px;align-items:center;margin-top:18px}.guide-row label{margin:0;grid-column:2/4;font-size:11px}.guide-row label span{float:right;font-size:10px}.guide-row input{grid-column:2;font-size:14px}.guide-row button{grid-column:3}.guide-dot{display:grid;place-items:center;font:11px ui-monospace,monospace;width:22px;height:22px;border-radius:50%;color:#110e0c}.one{background:var(--photo)}.two{background:var(--video)}.nudge-row{display:grid;grid-template-columns:1fr 38px 38px 58px;gap:5px;align-items:center;margin:18px 0 12px}.nudge-row label{grid-column:1/5;margin:0;font-size:11px}.nudge-row select{padding:8px 5px;font-size:11px}.nudge-row button{padding:6px;min-height:44px}.export-buttons{display:flex;gap:4px;flex-wrap:wrap}.export-buttons button{font-size:11px;padding:10px 9px}.export-buttons svg{width:16px;height:16px}.page-footer{display:flex;justify-content:space-between;gap:24px;margin-top:20px;color:var(--dim);font-size:11px;line-height:1.7}.page-footer p{max-width:670px}.page-footer a{display:flex;align-items:center;gap:6px;text-decoration:none;white-space:nowrap}.page-footer svg{width:14px;height:14px}.message{margin:0 0 16px;padding:12px 16px;border:1px solid var(--line);border-radius:12px;background:var(--s2);font-size:13px;line-height:1.5;color:var(--muted)}.message.error{color:#ff9d9d;border-color:#ff6b6b55}.comparison-summary{display:flex;justify-content:space-between;gap:20px;border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:20px;background:var(--s1)}.comparison-summary h2{font-size:16px;margin-top:7px}.comparison-summary #comparison-values{display:flex;gap:24px;align-items:center;font:13px ui-monospace,monospace}.comparison-summary .value{display:flex;flex-direction:column;gap:7px}.comparison-summary .value span{color:var(--dim);font-size:10px}.dropping{outline:2px dashed var(--ember);outline-offset:-6px}.busy{opacity:.55;pointer-events:none}[hidden]{display:none!important}
+@media(min-width:1450px){.workspace{grid-template-columns:minmax(0,1fr) 370px}.canvas-area{height:76vh}.result output{font-size:56px}}
+@media(max-width:1000px){.intro-note{display:none}.app-header{padding:16px 22px}main{padding:24px 22px}.viewer-toolbar{padding:10px}.source span{display:none}.viewer-actions{gap:2px}.viewer-actions button{font-size:11px;padding:8px}.workspace{grid-template-columns:minmax(0,1fr) 310px}.control-section,.result-card{padding:18px}.viewer-footer{flex-direction:column;gap:5px}.zoom-controls{gap:0}.view-toolbar{padding:8px}.zoom-controls output{min-width:45px}}
+@media(max-width:760px){.app-header{padding:14px 16px;gap:10px}.brand{font-size:22px}.brand-sub{font-size:8px}.privacy{font-size:0;gap:0}.app-header>#demo{font-size:11px;padding:8px}.app-header>#demo svg{display:none}main{padding:24px 12px 18px}.intro{padding:0 4px;margin-bottom:20px}h1{font-size:30px}.intro p{font-size:12px}.workspace{display:flex;flex-direction:column;gap:16px}.viewer{width:100%;position:relative;top:auto;border-radius:18px}.inspector{width:100%;border-radius:18px}.canvas-area{height:58vh;min-height:360px;max-height:680px}.view-toolbar{padding:8px 10px}.viewer-footer{flex-direction:row;flex-wrap:wrap;font-size:9px;gap:5px}.control-section,.result-card{padding:20px}.result output{font-size:50px}.page-footer{flex-direction:column;gap:10px;padding:0 4px}.comparison-summary{flex-direction:column;padding:18px}.guide-row{grid-template-columns:24px 1fr 80px}.intro-note{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+.formula{white-space:pre-line}.source span{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}input[aria-invalid=true]{border-color:#ff6b6b}.viewer-toolbar .source-tabs{min-width:0}.viewer-actions{flex-shrink:0}
+</style>
+</head>
+<body id="top">
+  <svg class="icon-defs" aria-hidden="true"><defs>
+    <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M4 3v17h17M4 8h5M4 13h3M4 18h5M13 20v-5M18 20v-3"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></symbol>
+    <symbol id="i-fit" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 7h10v10H7z"/></symbol>
+    <symbol id="i-cross" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 18v3h16v-3"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  </defs></svg>
+  <header class="app-header">
+    <a class="brand" href="#top" aria-label="Hearth screenshot ruler"><span class="brand-mark"><svg><use href="#i-ruler"/></svg></span><span>hearth<span class="brand-sub">SCREENSHOT RULER</span></span></a>
+    <span class="privacy"><span class="status-dot"></span>Images stay in your browser</span>
+    <button class="quiet" id="demo">Try the 12dp example <svg><use href="#i-arrow"/></svg></button>
+  </header>
+  <main>
+    <div class="intro"><div><div class="eyebrow">FROM PIXELS TO LAYOUT</div><h1>Know the gap.</h1><p>Two guides. A screen width. A measurement you can explain.</p></div><div class="intro-note"><span class="number">01</span> Open a screenshot <span class="number">02</span> Calibrate <span class="number">03</span> Place the guides</div></div>
+    <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+    <div class="workspace">
+      <section class="viewer" aria-label="Screenshot workspace">
+        <div class="viewer-toolbar">
+          <div class="source-tabs" role="group" aria-label="Active screenshot"><button id="source-a" class="source active" aria-pressed="true">A <span>Screenshot</span></button><button id="source-b" class="source" aria-pressed="false">B <span>Add another</span></button></div>
+          <div class="viewer-actions"><button class="quiet" id="open"><svg><use href="#i-upload"/></svg><span>Open image</span></button><button class="quiet" id="compare" aria-pressed="false" disabled>Compare A/B</button></div>
+        </div>
+        <div class="view-toolbar">
+          <div class="segmented" role="group" aria-label="Canvas tool"><button id="tool-guides" aria-pressed="true">Guides</button><button id="tool-pan" aria-pressed="false">Pan</button></div>
+          <div class="zoom-controls"><button id="zoom-out" aria-label="Zoom out" disabled>−</button><output id="zoom-label">Fit</output><button id="zoom-in" aria-label="Zoom in" disabled>+</button><button id="fit" aria-label="Fit screenshot" disabled><svg><use href="#i-fit"/></svg></button><button id="actual" disabled>1:1</button></div>
+        </div>
+        <div class="canvas-area" id="canvas-area">
+          <div class="canvas-pane" id="pane-a"><canvas id="canvas-a" aria-label="Screenshot A. Drag either guide, or use the coordinate fields." tabindex="0"></canvas><span class="pane-label" id="pane-label-a" hidden>A</span></div>
+          <div class="canvas-pane" id="pane-b" hidden><canvas id="canvas-b" aria-label="Screenshot B. Drag either guide, or use the coordinate fields." tabindex="0"></canvas><span class="pane-label" id="pane-label-b" hidden>B</span></div>
+          <div class="empty" id="empty"><span class="empty-mark"><svg><use href="#i-cross"/></svg></span><h2>Every pixel has a place.</h2><p>Drop a screenshot here, or choose one.<br>PNG, JPEG or WebP · up to 32MB / 20MP</p><button class="primary" id="empty-open"><svg><use href="#i-upload"/></svg>Choose screenshot</button><button class="text-button" id="empty-demo">Or explore a calibrated example</button></div>
+        </div>
+        <div class="viewer-footer"><span id="image-meta">No image selected</span><span id="gesture-hint">Drag guides · pinch or scroll to zoom</span></div>
+      </section>
+      <aside class="inspector" aria-label="Measurement controls">
+        <section class="result-card">
+          <div class="section-heading"><span class="eyebrow">VISIBLE DISTANCE</span><span class="source-chip" id="result-source">A</span></div>
+          <div class="result"><output id="result-dp">—</output><span>dp</span></div><div class="pixel-result"><output id="result-px">—</output> image px <span id="rounding"></span></div>
+          <div class="formula" id="formula">Open a screenshot to begin.</div>
+        </section>
+        <section class="control-section">
+          <div class="section-heading"><h2>Screen calibration</h2><span class="step-tag">01</span></div>
+          <label for="method">How do you know its scale?</label><select id="method"><option value="width">Screen width in dp · simplest</option><option value="dpi">Logical DPI + resize factor</option><option value="pixels">Pixels only · no dp calibration</option></select>
+          <div id="width-fields">
+            <label for="width-dp">Full captured screen width <span>dp</span></label><input id="width-dp" type="number" inputmode="decimal" min="1" max="10000" step="any" placeholder="e.g. 384" aria-describedby="width-help">
+            <p class="help" id="width-help">Use the width in dp of the screen when this screenshot was captured. In portrait, Developer options → Minimum width often matches it. Landscape and split screen need the actual captured width.</p>
+            <label class="checkbox"><input id="cropped" type="checkbox"><span>This image is a crop</span></label>
+            <div id="crop-fields" hidden><label for="reference-width">Full screenshot width at this resize scale <span>px</span></label><input id="reference-width" type="number" inputmode="decimal" min="1" step="any" placeholder="Width before cropping"><p class="help">Cropping alone keeps pixels the same size. If the crop was resized, enter the full screenshot width multiplied by that same resize factor.</p></div>
+          </div>
+          <div id="dpi-fields" hidden><label for="dpi">Screenshot device’s logical density <span>DPI</span></label><input id="dpi" type="number" inputmode="decimal" min="1" step="any" placeholder="e.g. 450"><p class="help caution">Minimum width 384dp is not 384 DPI. This browser’s pixel ratio is not the screenshot’s density.</p><label for="resize">Image resize factor <span>1 = unchanged</span></label><input id="resize" type="number" inputmode="decimal" min="0.001" step="any" value="1"><p class="help">Half size = 0.5. A crop with no resizing stays at 1. Stretched images need an undistorted source.</p></div>
+          <p class="calibration-state" id="calibration-state">No calibration yet.</p>
+        </section>
+        <section class="control-section">
+          <div class="section-heading"><h2>Two boundaries</h2><span class="step-tag">02</span></div>
+          <div class="segmented full" role="group" aria-label="Measurement direction"><button id="axis-y" aria-pressed="true">Vertical gap ↕</button><button id="axis-x" aria-pressed="false">Horizontal gap ↔</button></div>
+          <div class="guide-row"><span class="guide-dot one">1</span><label for="guide-1">Boundary 1 <span>image px</span></label><input id="guide-1" type="number" inputmode="decimal" step="any" disabled><button id="place-1" class="small" aria-label="Place boundary 1 on the image" disabled>Place</button></div>
+          <div class="guide-row"><span class="guide-dot two">2</span><label for="guide-2">Boundary 2 <span>image px</span></label><input id="guide-2" type="number" inputmode="decimal" step="any" disabled><button id="place-2" class="small" aria-label="Place boundary 2 on the image" disabled>Place</button></div>
+          <div class="nudge-row"><label for="selected-guide">Nudge</label><select id="selected-guide"><option value="0">Boundary 1</option><option value="1">Boundary 2</option></select><button id="nudge-minus" aria-label="Move selected boundary backward" disabled>−</button><button id="nudge-plus" aria-label="Move selected boundary forward" disabled>+</button><select id="nudge-unit" aria-label="Nudge increment"><option value="px">1px</option><option value="dp">1dp</option></select></div>
+          <button id="snap" class="outline full" disabled><svg><use href="#i-cross"/></svg>Snap selected guide to nearby edge</button><p class="help">Snap suggests the strongest contrast boundary within 24 source pixels, using the middle of the image. Inspect it; text, shadows and rounded corners can mislead.</p>
+        </section>
+        <section class="control-section export-section"><div class="section-heading"><h2>Keep the measurement</h2></div><div class="export-buttons"><button class="outline" id="export-png" disabled><svg><use href="#i-down"/></svg>Annotated PNG</button><button class="quiet" id="export-json" disabled>JSON report</button></div><p class="help">Images and guides live in this tab. Download a report before closing it.</p></section>
+      </aside>
+    </div>
+    <section class="comparison-summary" id="comparison-summary" hidden aria-label="Comparison results"><div><span class="eyebrow">COMPARE THE GAPS</span><h2>Two sources. Their own calibration.</h2></div><div id="comparison-values"></div></section>
+    <footer class="page-footer"><p>Measures visible bounds, not the spacer or padding declared in code. JPEG edges and supplied calibration affect accuracy.</p><a href="https://developer.android.com/training/multiscreen/screendensities" target="_blank" rel="noopener noreferrer">Android’s dp conversion <svg><use href="#i-arrow"/></svg></a></footer>
+  </main>
+  <input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+  <script>(() => {
+'use strict';
+// src/measurement.mjs
+const __ruler_module_0 = (() => {
+
+// Coordinates are boundaries in the decoded source image, never browser pixels.
+const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+const positive = (value) => Number.isFinite(Number(value)) && Number(value) > 0;
+
+function calibrate(input, imageWidth) {
+  if (input.method === 'pixels') return { factor: null, reason: 'Pixel-only · add calibration to measure dp.' };
+  if (input.method === 'width') {
+    const widthDp = Number(input.widthDp);
+    const referenceWidth = input.cropped ? Number(input.referenceWidth) : imageWidth;
+    if (!positive(widthDp) || widthDp > 10000) return { factor: null, reason: 'Enter the full captured screen width in dp (up to 10,000).' };
+    if (!positive(referenceWidth)) return { factor: null, reason: 'Enter the full screenshot width in pixels at the same resize scale as this crop.' };
+    if (input.cropped && referenceWidth < imageWidth) return { factor: null, reason: 'The full screenshot cannot be narrower than this crop.' };
+    return { factor: widthDp / referenceWidth, widthDp, referenceWidth,
+      formula: `dp = image px × ${widthDp} ÷ ${referenceWidth}` };
+  }
+  if (input.method === 'dpi') {
+    const dpi = Number(input.dpi), resize = Number(input.resize);
+    if (!positive(dpi) || dpi > 10000 || !positive(resize) || resize < .001 || resize > 100) return { factor: null, reason: 'Enter logical DPI (up to 10,000) and a uniform resize factor from 0.001 to 100.' };
+    return { factor: 160 / (dpi * resize), dpi, resize,
+      formula: `dp = image px × 160 ÷ (${dpi} × ${resize})` };
+  }
+  return { factor: null, reason: 'Choose a calibration method.' };
+}
+
+function measure(guides, calibration) {
+  const px = Math.abs(guides[1] - guides[0]);
+  return { px, dp: calibration.factor === null ? null : px * calibration.factor,
+    // A one-pixel selection/edge uncertainty, not a statistical confidence interval.
+    dpPerPixel: calibration.factor };
+}
+
+function stepSize(unit, calibration) {
+  return unit === 'dp' && calibration.factor !== null ? 1 / calibration.factor : 1;
+}
+
+function fitTransform(sourceWidth, sourceHeight, width, height) {
+  const scale = Math.min((width - 64) / sourceWidth, (height - 64) / sourceHeight);
+  const safe = Math.max(0.001, scale);
+  return { scale: safe, x: (width - sourceWidth * safe) / 2, y: (height - sourceHeight * safe) / 2 };
+}
+
+const toSource = (point, view) => ({ x: (point.x - view.x) / view.scale, y: (point.y - view.y) / view.scale });
+const toView = (point, view) => ({ x: point.x * view.scale + view.x, y: point.y * view.scale + view.y });
+
+function zoomAt(view, point, ratio) {
+  const source = toSource(point, view);
+  const scale = clamp(view.scale * ratio, 0.001, 64);
+  return { scale, x: point.x - source.x * scale, y: point.y - source.y * scale };
+}
+
+function boundedGuide(value, size) {
+  return clamp(Number.isFinite(value) ? value : 0, 0, size);
+}
+
+// A local contrast suggestion. It never infers a layout spacer from an image.
+// scores[n] is the mean absolute RGB change across the boundary before pixel n.
+function nearestEdge(scores, guide, radius = 24) {
+  const start = Math.max(1, Math.ceil(guide - radius));
+  const end = Math.min(scores.length - 1, Math.floor(guide + radius));
+  let best = null, strength = 6;
+  for (let i = start; i <= end; i++) {
+    const score = scores[i] - Math.abs(i - guide) * 0.025;
+    if (score > strength) { strength = score; best = i; }
+  }
+  return best;
+}
+
+function measurementReport(slot) {
+  const calibration = calibrate(slot.calibration, slot.width);
+  return { schemaVersion: 1, image: { name: slot.name, width: slot.width, height: slot.height },
+    axis: slot.axis, guides: [...slot.guides[slot.axis]],
+    calibration: { ...slot.calibration }, conversion: calibration,
+    measurement: measure(slot.guides[slot.axis], calibration),
+    meaning: 'Distance between selected visible boundaries. Does not recover declared padding or spacers.',
+    precision: 'dp is derived from supplied calibration. Decimal places do not imply subpixel certainty.' };
+}
+
+return Object.freeze({ clamp, positive, calibrate, measure, stepSize, fitTransform, toSource, toView, zoomAt, boundedGuide, nearestEdge, measurementReport });
+})();
+
+// src/canvas.mjs
+const __ruler_module_1 = (() => {
+const { clamp, boundedGuide, fitTransform, toSource, toView, zoomAt, calibrate, measure } = __ruler_module_0;
+
+const colors = ['#f5c04e', '#8e9bff'];
+const margin = 28;
+
+class ScreenshotCanvas {
+  constructor(canvas, getSlot, onGuide, onSelect, onView) {
+    this.canvas = canvas;
+    this.getSlot = getSlot;
+    this.onGuide = onGuide;
+    this.onSelect = onSelect;
+    this.onView = onView;
+    this.view = { scale: 1, x: 0, y: 0 };
+    this.width = 0; this.height = 0; this.pointers = new Map();
+    this.tool = 'guides'; this.place = null;
+    this.observer = new ResizeObserver(() => this.resize());
+    this.observer.observe(canvas.parentElement);
+    canvas.addEventListener('pointerdown', e => this.down(e));
+    canvas.addEventListener('pointermove', e => this.move(e));
+    canvas.addEventListener('pointerup', e => this.up(e));
+    canvas.addEventListener('pointercancel', e => this.up(e, true));
+    canvas.addEventListener('lostpointercapture', e => this.up(e, true));
+    canvas.addEventListener('wheel', e => {
+      if (!this.getSlot().image) return;
+      e.preventDefault(); this.onSelect();
+      this.view = zoomAt(this.view, this.point(e), Math.exp(-clamp(e.deltaY, -200, 200) * .002));
+      this.draw(); this.onView();
+    }, { passive: false });
+  }
+
+  point(e) { const r = this.canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  resize() {
+    const r = this.canvas.parentElement.getBoundingClientRect();
+    if (r.width < 1 || r.height < 1) return;
+    const old = { width: this.width, height: this.height };
+    this.width = r.width; this.height = r.height;
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    this.canvas.width = Math.round(this.width * dpr);
+    this.canvas.height = Math.round(this.height * dpr);
+    this.dpr = dpr;
+    // Preserve the source under the centre across pane/orientation changes.
+    if (old.width > 0 && old.height > 0) {
+      this.view.x += (this.width - old.width) / 2;
+      this.view.y += (this.height - old.height) / 2;
+    } else if (this.getSlot().image) this.fit(false);
+    this.draw(); this.onView();
+  }
+  fit(redraw = true) {
+    const slot = this.getSlot();
+    if (slot.image && this.width > 0) this.view = fitTransform(slot.width, slot.height, this.width, this.height);
+    if (redraw) { this.draw(); this.onView(); }
+  }
+  zoom(ratio) { this.view = zoomAt(this.view, { x: this.width / 2, y: this.height / 2 }, ratio); this.draw(); this.onView(); }
+  actual() {
+    const center = toSource({ x: this.width / 2, y: this.height / 2 }, this.view);
+    this.view = { scale: 1, x: this.width / 2 - center.x, y: this.height / 2 - center.y };
+    this.draw(); this.onView();
+  }
+  // 1:1 here is one source pixel per CSS pixel, never an Android density guess.
+  setTool(tool) { this.tool = tool; this.canvas.style.cursor = tool === 'pan' ? 'grab' : 'crosshair'; }
+
+  down(e) {
+    const s = this.getSlot(); if (!s.image || e.button > 0) return;
+    this.onSelect(); this.canvas.focus({ preventScroll: true });
+    this.canvas.setPointerCapture(e.pointerId);
+    const p = this.point(e); this.pointers.set(e.pointerId, p);
+    if (this.pointers.size === 2) {
+      // A second finger cancels a guide draft before beginning view-only zoom.
+      if (this.drag?.type === 'guide') this.onGuide(this.drag.index, this.drag.original);
+      const [a, b] = [...this.pointers.values()];
+      this.drag = { type: 'pinch', view: { ...this.view }, center: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }, distance: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)) };
+      return;
+    }
+    if (this.pointers.size > 2) return;
+    const coordinate = s.axis === 'y' ? p.y : p.x;
+    const positions = s.guides[s.axis].map(v => s.axis === 'y' ? toView({ x: 0, y: v }, this.view).y : toView({ x: v, y: 0 }, this.view).x);
+    const distances = positions.map(v => Math.abs(coordinate - v));
+    const near = distances[0] <= distances[1] ? 0 : 1;
+    const index = this.place ?? (distances[near] <= (e.pointerType === 'touch' ? 26 : 12) ? near : null);
+    if (index !== null && this.tool !== 'pan') {
+      this.drag = { type: 'guide', index, original: s.guides[s.axis][index], axis: s.axis };
+      const source = toSource(p, this.view);
+      this.onGuide(index, boundedGuide(source[s.axis], s.axis === 'y' ? s.height : s.width));
+      this.place = null;
+    } else this.drag = { type: 'pan', origin: p, view: { ...this.view } };
+  }
+  move(e) {
+    if (!this.pointers.has(e.pointerId)) return;
+    const p = this.point(e); this.pointers.set(e.pointerId, p);
+    const s = this.getSlot(), d = this.drag; if (!d) return;
+    if (d.type === 'pinch' && this.pointers.size >= 2) {
+      const [a, b] = [...this.pointers.values()];
+      const center = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      this.view = zoomAt(d.view, d.center, Math.hypot(a.x - b.x, a.y - b.y) / d.distance);
+      this.view.x += center.x - d.center.x; this.view.y += center.y - d.center.y;
+    } else if (d.type === 'guide' && s.axis === d.axis) {
+      const source = toSource(p, this.view);
+      this.onGuide(d.index, boundedGuide(source[s.axis], s.axis === 'y' ? s.height : s.width));
+    } else if (d.type === 'pan') this.view = { ...d.view, x: d.view.x + p.x - d.origin.x, y: d.view.y + p.y - d.origin.y };
+    this.draw(); this.onView();
+  }
+  up(e, cancelled = false) {
+    if (!this.pointers.has(e.pointerId)) return;
+    if (cancelled && this.drag?.type === 'guide') this.onGuide(this.drag.index, this.drag.original);
+    this.pointers.delete(e.pointerId);
+    // Prevent the remaining pinch finger from unexpectedly moving a guide.
+    this.drag = null;
+    if (!this.pointers.size) this.onView();
+  }
+  cancelDraft() {
+    if (this.drag?.type === 'guide') this.onGuide(this.drag.index, this.drag.original);
+    this.drag = null; this.pointers.clear(); this.place = null;
+  }
+
+  draw() {
+    if (!this.width || !this.height) return;
+    const c = this.canvas.getContext('2d');
+    c.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    c.fillStyle = '#0c0a09'; c.fillRect(0, 0, this.width, this.height);
+    const s = this.getSlot(); if (!s.image) return;
+    const v = this.view;
+    c.save(); c.beginPath(); c.rect(margin, margin, this.width - margin, this.height - margin); c.clip();
+    c.imageSmoothingEnabled = v.scale < 2;
+    c.drawImage(s.image, v.x, v.y, s.width * v.scale, s.height * v.scale);
+    c.strokeStyle = '#3f3630'; c.lineWidth = 1; c.strokeRect(v.x, v.y, s.width * v.scale, s.height * v.scale);
+    const positions = s.guides[s.axis].map(value => s.axis === 'y' ? v.y + value * v.scale : v.x + value * v.scale);
+    c.fillStyle = '#f5c04e14';
+    if (s.axis === 'y') c.fillRect(Math.max(margin, v.x), Math.min(...positions), s.width * v.scale, Math.abs(positions[1] - positions[0]));
+    else c.fillRect(Math.min(...positions), Math.max(margin, v.y), Math.abs(positions[1] - positions[0]), s.height * v.scale);
+    for (let i = 0; i < 2; i++) {
+      const p = positions[i]; c.strokeStyle = colors[i]; c.lineWidth = 1.5; c.beginPath();
+      if (s.axis === 'y') { c.moveTo(margin, p); c.lineTo(this.width, p); }
+      else { c.moveTo(p, margin); c.lineTo(p, this.height); } c.stroke();
+      const x = s.axis === 'y' ? margin + 14 : p, y = s.axis === 'y' ? p : margin + 14;
+      c.fillStyle = colors[i]; c.beginPath(); c.arc(x, y, 11, 0, 2 * Math.PI); c.fill();
+      c.fillStyle = '#110e0c'; c.font = '11px ui-monospace,monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(i + 1), x, y);
+    }
+    const m = measure(s.guides[s.axis], calibrate(s.calibration, s.width));
+    const label = s.invalidGuides ? 'Check guides' : m.dp === null ? `${m.px.toFixed(2)} px` : `${m.dp.toFixed(2)} dp`;
+    const labelWidth = c.measureText(label).width + 18;
+    const mid = (positions[0] + positions[1]) / 2;
+    const lx = s.axis === 'y' ? this.width - labelWidth - 14 : clamp(mid - labelWidth / 2, margin + 10, this.width - labelWidth - 10);
+    const ly = s.axis === 'y' ? clamp(mid, margin + 18, this.height - 18) : this.height - 22;
+    c.fillStyle = '#110e0cee'; c.fillRect(lx, ly - 12, labelWidth, 24);
+    c.fillStyle = '#f7efe7'; c.fillText(label, lx + labelWidth / 2, ly);
+    c.restore();
+    this.ruler(c, 'x'); this.ruler(c, 'y');
+    c.fillStyle = '#1a1613'; c.fillRect(0, 0, margin, margin); c.fillStyle = '#a39588';
+    c.font = '9px ui-monospace,monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('px', 14, 14);
+  }
+  ruler(c, axis) {
+    const horizontal = axis === 'x', length = horizontal ? this.width : this.height;
+    const origin = horizontal ? this.view.x : this.view.y, scale = this.view.scale;
+    const size = horizontal ? this.getSlot().width : this.getSlot().height;
+    c.fillStyle = '#1a1613'; c.fillRect(horizontal ? margin : 0, horizontal ? 0 : margin, horizontal ? length : margin, horizontal ? margin : length);
+    const raw = 65 / scale, power = 10 ** Math.floor(Math.log10(raw));
+    const multiple = raw / power <= 1 ? 1 : raw / power <= 2 ? 2 : raw / power <= 5 ? 5 : 10;
+    const step = multiple * power;
+    const start = Math.ceil(Math.max(0, (margin - origin) / scale) / step) * step;
+    const end = Math.min(size, (length - origin) / scale);
+    c.strokeStyle = '#51443a'; c.fillStyle = '#a39588'; c.font = '9px ui-monospace,monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    for (let value = start, count = 0; value <= end && count < 100; value += step, count++) {
+      const p = origin + value * scale; c.beginPath();
+      if (horizontal) { c.moveTo(p, margin - 5); c.lineTo(p, margin); c.stroke(); c.fillText(Number(value.toFixed(2)).toString(), p, 12); }
+      else { c.moveTo(margin - 5, p); c.lineTo(margin, p); c.stroke(); c.save(); c.translate(12, p); c.rotate(-Math.PI / 2); c.fillText(Number(value.toFixed(2)).toString(), 0, 0); c.restore(); }
+    }
+  }
+}
+
+return Object.freeze({ ScreenshotCanvas });
+})();
+
+// src/image-file.mjs
+const __ruler_module_2 = (() => {
+
+const MAX_BYTES = 32 * 1024 * 1024;
+const MAX_PIXELS = 20_000_000;
+
+// Header check before decode to reject oversized or unsupported raster inputs.
+function imageDimensions(bytes) {
+  const v = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const ascii = (at, n) => String.fromCharCode(...bytes.slice(at, at + n));
+  if (bytes.length >= 24 && v.getUint32(0) === 0x89504e47 && v.getUint32(4) === 0x0d0a1a0a && ascii(12, 4) === 'IHDR') return { width: v.getUint32(16), height: v.getUint32(20) };
+  if (bytes.length >= 30 && ascii(0, 4) === 'RIFF' && ascii(8, 4) === 'WEBP') {
+    const tag = ascii(12, 4);
+    if (tag === 'VP8X') return { width: 1 + bytes[24] + (bytes[25] << 8) + (bytes[26] << 16), height: 1 + bytes[27] + (bytes[28] << 8) + (bytes[29] << 16) };
+    if (tag === 'VP8L' && bytes[20] === 0x2f) return { width: 1 + bytes[21] + ((bytes[22] & 0x3f) << 8), height: 1 + (bytes[22] >> 6) + (bytes[23] << 2) + ((bytes[24] & 0xf) << 10) };
+    if (tag === 'VP8 ' && bytes[23] === 0x9d && bytes[24] === 1 && bytes[25] === 0x2a) return { width: v.getUint16(26, true) & 0x3fff, height: v.getUint16(28, true) & 0x3fff };
+  }
+  if (bytes.length >= 4 && bytes[0] === 0xff && bytes[1] === 0xd8) {
+    let at = 2;
+    while (at + 4 <= bytes.length) {
+      if (bytes[at] !== 0xff) break;
+      while (bytes[at] === 0xff) at++;
+      const marker = bytes[at++];
+      if (marker === 0xda || marker === 0xd9) break;
+      if (marker === 0x01 || marker >= 0xd0 && marker <= 0xd8) continue;
+      if (at + 2 > bytes.length) break;
+      const length = v.getUint16(at);
+      if (length < 2 || at + length > bytes.length) break;
+      if ([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf].includes(marker) && length >= 8) return { height: v.getUint16(at + 3), width: v.getUint16(at + 5) };
+      at += length;
+    }
+  }
+  throw new Error('Use a valid PNG, JPEG or WebP screenshot. SVG, HEIF and video are not supported.');
+}
+
+async function loadScreenshot(file) {
+  if (!file.size || file.size > MAX_BYTES) throw new Error('Choose an image under 32MB. The current screenshot has been kept.');
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const size = imageDimensions(bytes);
+  if (!size.width || !size.height || size.width * size.height > MAX_PIXELS || Math.max(size.width, size.height) > 20000) throw new Error('Screenshot exceeds the 20MP / 20,000px limit. The current screenshot has been kept.');
+  const url = URL.createObjectURL(file), image = new Image();
+  try {
+    await new Promise((resolve, reject) => { image.onload = resolve; image.onerror = () => reject(new Error('This image could not be decoded. The current screenshot has been kept.')); image.src = url; });
+    if (!image.naturalWidth || image.naturalWidth * image.naturalHeight > MAX_PIXELS) throw new Error('Decoded screenshot is too large.');
+    return { image, url, width: image.naturalWidth, height: image.naturalHeight, name: file.name };
+  } catch (error) { URL.revokeObjectURL(url); throw error; }
+}
+
+function edgeScores(slot, axis) {
+  const length = axis === 'y' ? slot.height : slot.width;
+  const canvas = document.createElement('canvas');
+  // Preserve the measured axis 1:1, average 32 samples across the middle third.
+  canvas.width = axis === 'y' ? 32 : length; canvas.height = axis === 'y' ? length : 32;
+  const c = canvas.getContext('2d', { willReadFrequently: true });
+  if (axis === 'y') c.drawImage(slot.image, slot.width / 3, 0, slot.width / 3, slot.height, 0, 0, 32, length);
+  else c.drawImage(slot.image, 0, slot.height / 3, slot.width, slot.height / 3, 0, 0, length, 32);
+  const data = c.getImageData(0, 0, canvas.width, canvas.height).data;
+  const scores = new Float64Array(length + 1);
+  for (let n = 1; n < length; n++) {
+    let sum = 0;
+    for (let p = 0; p < 32; p++) {
+      const here = (axis === 'y' ? n * 32 + p : p * length + n) * 4;
+      const prev = here - (axis === 'y' ? 32 : 1) * 4;
+      for (let channel = 0; channel < 3; channel++) sum += Math.abs(data[here + channel] - data[prev + channel]);
+    }
+    scores[n] = sum / 96;
+  }
+  canvas.width = 0; canvas.height = 0;
+  return scores;
+}
+
+return Object.freeze({ MAX_BYTES, MAX_PIXELS, imageDimensions, loadScreenshot, edgeScores });
+})();
+
+// src/export.mjs
+const __ruler_module_3 = (() => {
+const { measurementReport } = __ruler_module_0;
+
+const download = (blob, name) => {
+  const url = URL.createObjectURL(blob), link = document.createElement('a');
+  link.href = url; link.download = name; document.body.append(link); link.click(); link.remove();
+  // Keep the URL long enough for mobile browsers to begin their download.
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+};
+const filename = (name) => name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '-').slice(0, 80) || 'screenshot';
+
+function exportJson(slot) {
+  download(new Blob([JSON.stringify(measurementReport(slot), null, 2) + '\n'], { type: 'application/json' }), `${filename(slot.name)}-measurement.json`);
+}
+
+async function exportPng(slot) {
+  const report = measurementReport(slot), c = document.createElement('canvas');
+  // Pad narrow crops so calibration is still legible in the exported report.
+  const width = Math.max(640, slot.width), fontSize = Math.max(16, Math.min(32, width / 40));
+  c.width = width; c.height = 1;
+  const g = c.getContext('2d');
+  if (!g) throw new Error('The browser could not allocate the PNG report. Try the JSON report.');
+  g.font = `${fontSize}px ui-monospace,monospace`;
+  const dp = report.measurement.dp === null ? 'dp uncalibrated' : `${report.measurement.dp.toFixed(2)} dp (calibration-derived)`;
+  const lines = [
+    `HEARTH SCREENSHOT RULER · ${report.measurement.px.toFixed(2)} image px · ${dp}`,
+    `${slot.width} × ${slot.height} px · ${slot.axis === 'y' ? 'vertical' : 'horizontal'} · boundaries ${report.guides.map(v => v.toFixed(2)).join(' → ')}`,
+    report.conversion.formula || report.conversion.reason,
+    'Zoom excluded. Visible distance does not reveal declared layout spacers.',
+    'Calibration and pixel-edge selection determine accuracy.'
+  ];
+  const wrapped = [];
+  // Wrap by measured text width, including unusually narrow screenshots.
+  for (const line of lines) {
+    let current = '';
+    for (const word of line.split(' ')) {
+      if (current && g.measureText(`${current} ${word}`).width > width - 40) { wrapped.push(current); current = word; }
+      else current += (current ? ' ' : '') + word;
+    }
+    wrapped.push(current);
+  }
+  c.height = slot.height + Math.ceil((wrapped.length + 2) * fontSize * 1.6);
+  g.fillStyle = '#110e0c'; g.fillRect(0, 0, c.width, c.height);
+  g.drawImage(slot.image, 0, 0, slot.width, slot.height);
+  const colors = ['#f5c04e', '#8e9bff'];
+  report.guides.forEach((value, index) => {
+    g.strokeStyle = colors[index]; g.lineWidth = Math.max(1, slot.width / 600); g.beginPath();
+    if (slot.axis === 'y') { g.moveTo(0, value); g.lineTo(slot.width, value); }
+    else { g.moveTo(value, 0); g.lineTo(value, slot.height); } g.stroke();
+  });
+  g.font = `${fontSize}px ui-monospace,monospace`; g.fillStyle = '#f7efe7';
+  wrapped.forEach((line, index) => g.fillText(line, 20, slot.height + fontSize * (1.7 + index * 1.6)));
+  const blob = await new Promise(resolve => c.toBlob(resolve, 'image/png'));
+  c.width = 0; c.height = 0;
+  if (!blob) throw new Error('The browser could not encode this PNG. Use the JSON report or a smaller screenshot.');
+  download(blob, `${filename(slot.name)}-measured.png`);
+}
+
+return Object.freeze({ exportJson, exportPng });
+})();
+
+// src/app.mjs
+const __ruler_module_4 = (() => {
+const { calibrate, measure, stepSize, boundedGuide, nearestEdge, measurementReport } = __ruler_module_0;
+const { ScreenshotCanvas } = __ruler_module_1;
+const { loadScreenshot, edgeScores } = __ruler_module_2;
+const { exportJson, exportPng } = __ruler_module_3;
+
+
+
+
+const $ = id => document.getElementById(id);
+const newSlot = () => ({ image: null, width: 0, height: 0, name: '', url: null,
+  axis: 'y', guides: { x: [0, 0], y: [0, 0] }, selectedGuide: 0, generation: 0,
+  calibration: { method: 'width', widthDp: '', cropped: false, referenceWidth: '', dpi: '', resize: '1' },
+  invalidGuides: false, guideDrafts: { x: [null, null], y: [null, null] } });
+const slots = { a: newSlot(), b: newSlot() };
+let selected = 'a', comparing = false, tool = 'guides', pickerTarget = 'a', busyCount = 0;
+const current = () => slots[selected];
+const number = value => Number(value.toFixed(2)).toLocaleString('en-US', { maximumFractionDigits: 2 });
+
+function message(text, error = false) { $('message').textContent = text; $('message').hidden = !text; $('message').classList.toggle('error', error); }
+function select(id) {
+  if (selected !== id) {
+    for (const view of Object.values(views)) view.cancelDraft();
+    selected = id; update(true);
+  }
+}
+function guide(id, index, value) {
+  const s = slots[id]; s.guides[s.axis][index] = value; s.selectedGuide = index; s.guideDrafts[s.axis][index] = null;
+  s.invalidGuides = s.guideDrafts[s.axis].some(draft => draft !== null && (draft === '' || !Number.isFinite(Number(draft)) || Number(draft) < 0 || Number(draft) > (s.axis === 'y' ? s.height : s.width)));
+  if (id !== selected) selected = id;
+  update();
+}
+const views = Object.fromEntries(['a', 'b'].map(id => [id, new ScreenshotCanvas($(`canvas-${id}`), () => slots[id], (index, value) => guide(id, index, value), () => select(id), viewLabels)]));
+
+function field(id, value, force) {
+  if (force || document.activeElement !== $(id)) $(id).value = value;
+}
+function viewLabels() {
+  const s = current(), v = views[selected];
+  $('zoom-label').value = s.image ? `${Math.round(v.view.scale * 100)}%` : 'Fit';
+}
+function update(force = false) {
+  const s = current(), ready = !!s.image, c = calibrate(s.calibration, s.width), m = measure(s.guides[s.axis], c);
+  for (const id of ['a', 'b']) {
+    $(`source-${id}`).classList.toggle('active', selected === id);
+    $(`source-${id}`).setAttribute('aria-pressed', String(selected === id));
+    $(`source-${id}`).querySelector('span').textContent = slots[id].image ? slots[id].name : id === 'a' ? 'Screenshot' : 'Add another';
+    $(`pane-${id}`).hidden = !comparing && selected !== id;
+    $(`pane-label-${id}`).hidden = !comparing;
+  }
+  $('empty').hidden = ready || comparing;
+  $('compare').disabled = !slots.a.image || !slots.b.image;
+  $('compare').setAttribute('aria-pressed', String(comparing));
+  $('compare').textContent = comparing ? 'Single view' : 'Compare A/B';
+  $('result-source').textContent = selected.toUpperCase();
+  $('result-source').style.color = selected === 'a' ? '#f5c04e' : '#8e9bff';
+  $('image-meta').textContent = ready ? `${selected.toUpperCase()} · ${s.width} × ${s.height} image px` : 'No image selected';
+  $('result-dp').value = ready && !s.invalidGuides && m.dp !== null ? number(m.dp) : '—';
+  $('result-px').value = ready && !s.invalidGuides ? number(m.px) : '—';
+  $('rounding').textContent = ready && m.dp !== null ? `· 1px ≈ ${number(m.dpPerPixel)}dp` : '';
+  $('formula').textContent = !ready ? 'Open a screenshot to begin.' : s.invalidGuides ? 'Correct the boundary coordinate to continue.' : c.factor === null ? c.reason : `${number(m.px)} × ${c.factor.toFixed(6)} = ${number(m.dp)} dp\n${c.formula}`;
+  const state = !ready ? 'No image selected.' : c.factor === null ? c.reason : `1 image px = ${c.factor.toFixed(6)} dp · zoom does not change this`;
+  $('calibration-state').textContent = state;
+  $('calibration-state').classList.toggle('invalid', c.factor === null);
+  $('width-fields').hidden = s.calibration.method !== 'width'; $('dpi-fields').hidden = s.calibration.method !== 'dpi';
+  $('crop-fields').hidden = !s.calibration.cropped;
+  for (const [id, key] of [['method','method'], ['width-dp','widthDp'], ['reference-width','referenceWidth'], ['dpi','dpi'], ['resize','resize']]) field(id, s.calibration[key], force);
+  $('cropped').checked = s.calibration.cropped;
+  for (const axis of ['x', 'y']) $(`axis-${axis}`).setAttribute('aria-pressed', String(s.axis === axis));
+  for (const name of ['guides', 'pan']) $(`tool-${name}`).setAttribute('aria-pressed', String(tool === name));
+  for (let i = 0; i < 2; i++) {
+    const input = $(`guide-${i + 1}`), draft = s.guideDrafts[s.axis][i]; field(input.id, ready ? draft ?? Number(s.guides[s.axis][i].toFixed(3)) : '', force);
+    input.max = s.axis === 'y' ? s.height : s.width; input.min = 0;
+    input.setAttribute('aria-invalid', String(draft !== null && (draft === '' || !Number.isFinite(Number(draft)) || Number(draft) < 0 || Number(draft) > Number(input.max))));
+    $(`place-${i + 1}`).classList.toggle('primary', views[selected].place === i);
+  }
+  field('selected-guide', s.selectedGuide, force);
+  const canExport = ready && !s.invalidGuides && !busyCount;
+  for (const id of ['guide-1', 'guide-2', 'place-1', 'place-2', 'snap', 'zoom-out', 'zoom-in', 'fit', 'actual']) $(id).disabled = !ready;
+  const nudgeOk = ready && ($('nudge-unit').value === 'px' || c.factor !== null);
+  $('nudge-minus').disabled = $('nudge-plus').disabled = !nudgeOk;
+  $('export-json').disabled = $('export-png').disabled = !canExport;
+  $('open').disabled = $('empty-open').disabled = busyCount > 0;
+  $('demo').disabled = $('empty-demo').disabled = busyCount > 0;
+  $('comparison-summary').hidden = !slots.a.image || !slots.b.image;
+  const summary = $('comparison-values'); summary.replaceChildren();
+  if (slots.a.image && slots.b.image) {
+    const results = {};
+    for (const id of ['a', 'b']) {
+      const other = slots[id]; results[id] = other.invalidGuides ? { px: null, dp: null } : measure(other.guides[other.axis], calibrate(other.calibration, other.width));
+      const box = document.createElement('div'), title = document.createElement('span'), value = document.createElement('strong');
+      box.className = 'value'; title.textContent = `SOURCE ${id.toUpperCase()} · ${other.axis === 'y' ? 'VERTICAL' : 'HORIZONTAL'}`;
+      value.textContent = results[id].dp === null ? results[id].px === null ? 'Invalid guides' : `${number(results[id].px)}px · uncalibrated` : `${number(results[id].dp)}dp`;
+      box.append(title, value); summary.append(box);
+    }
+    if (results.a.dp !== null && results.b.dp !== null && slots.a.axis === slots.b.axis) {
+      const box = document.createElement('div'), title = document.createElement('span'), value = document.createElement('strong');
+      box.className = 'value'; title.textContent = 'ABSOLUTE DIFFERENCE'; value.textContent = `${number(Math.abs(results.a.dp - results.b.dp))}dp`; box.append(title, value); summary.append(box);
+    }
+  }
+  for (const v of Object.values(views)) v.draw(); viewLabels();
+}
+
+async function openFile(file, target = selected) {
+  const old = slots[target], ticket = ++old.generation; busyCount++; update();
+  message(`Opening screenshot ${target.toUpperCase()}…`);
+  let loaded;
+  try {
+    loaded = await loadScreenshot(file);
+    if (old.generation !== ticket) { URL.revokeObjectURL(loaded.url); return; }
+    const next = { ...newSlot(), ...loaded, generation: ticket };
+    next.guides = { x: [loaded.width * .35, loaded.width * .65], y: [loaded.height * .4, loaded.height * .6] };
+    views[target].cancelDraft();
+    slots[target] = next; if (old.url) URL.revokeObjectURL(old.url);
+    selected = target; update(true); views[target].resize(); views[target].fit();
+    message(`${target.toUpperCase()} opened · ${loaded.width} × ${loaded.height}px. Enter its captured screen width in dp, then place the guides.`);
+  } catch (error) { if (old.generation === ticket) message(error.message || 'The image could not be opened.', true); }
+  finally { busyCount--; update(); }
+}
+function pick() { pickerTarget = selected; $('file-input').value = ''; $('file-input').click(); }
+for (const id of ['open', 'empty-open']) $(id).addEventListener('click', pick);
+$('file-input').addEventListener('change', () => { const file = $('file-input').files[0]; if (file) openFile(file, pickerTarget); });
+for (const id of ['a', 'b']) $(`source-${id}`).addEventListener('click', () => { select(id); if (!slots[id].image) pick(); });
+$('compare').addEventListener('click', () => { comparing = !comparing; update(); requestAnimationFrame(() => { for (const v of Object.values(views)) { v.resize(); v.fit(); } }); });
+for (const name of ['guides', 'pan']) $(`tool-${name}`).addEventListener('click', () => {
+  for (const v of Object.values(views)) { v.cancelDraft(); v.setTool(name); } tool = name; update();
+});
+for (const axis of ['x', 'y']) $(`axis-${axis}`).addEventListener('click', () => {
+  views[selected].cancelDraft(); current().axis = axis;
+  const s = current(); s.invalidGuides = s.guideDrafts[axis].some(draft => draft !== null && (draft === '' || !Number.isFinite(Number(draft)) || Number(draft) < 0 || Number(draft) > (axis === 'y' ? s.height : s.width))); update(true);
+});
+for (const [id, key] of [['method','method'], ['width-dp','widthDp'], ['reference-width','referenceWidth'], ['dpi','dpi'], ['resize','resize']]) $(id).addEventListener(id === 'method' ? 'change' : 'input', () => { current().calibration[key] = $(id).value; update(); });
+$('cropped').addEventListener('change', () => { current().calibration.cropped = $('cropped').checked; update(); });
+for (let i = 0; i < 2; i++) {
+  $(`guide-${i + 1}`).addEventListener('input', () => {
+    const input = $(`guide-${i + 1}`), value = Number(input.value), s = current(), limit = s.axis === 'y' ? s.height : s.width;
+    const valid = input.value !== '' && Number.isFinite(value) && value >= 0 && value <= limit;
+    s.guideDrafts[s.axis][i] = input.value;
+    s.invalidGuides = s.guideDrafts[s.axis].some(draft => draft !== null && (draft === '' || !Number.isFinite(Number(draft)) || Number(draft) < 0 || Number(draft) > limit));
+    if (valid) { s.guides[s.axis][i] = value; s.selectedGuide = i; }
+    update();
+  });
+  $(`place-${i + 1}`).addEventListener('click', () => { tool = 'guides'; for (const v of Object.values(views)) v.setTool(tool); views[selected].place = i; current().selectedGuide = i; message(`Tap the ${current().axis === 'y' ? 'horizontal' : 'vertical'} boundary for guide ${i + 1}, or drag it.`); update(true); });
+}
+$('selected-guide').addEventListener('change', () => { current().selectedGuide = Number($('selected-guide').value); });
+$('nudge-unit').addEventListener('change', () => update());
+function nudge(direction, multiplier = 1) {
+  const s = current(), c = calibrate(s.calibration, s.width); if (!s.image || $('nudge-unit').value === 'dp' && c.factor === null) return;
+  const index = s.selectedGuide, value = s.guides[s.axis][index] + direction * multiplier * stepSize($('nudge-unit').value, c);
+  guide(selected, index, boundedGuide(value, s.axis === 'y' ? s.height : s.width)); update(true);
+}
+$('nudge-minus').addEventListener('click', () => nudge(-1)); $('nudge-plus').addEventListener('click', () => nudge(1));
+for (const id of ['a','b']) $(`canvas-${id}`).addEventListener('keydown', e => {
+  if (['ArrowUp','ArrowLeft','ArrowDown','ArrowRight'].includes(e.key)) { e.preventDefault(); select(id); nudge(e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? -1 : 1, e.shiftKey ? 10 : 1); }
+  if (e.key === 'Escape') { views[id].cancelDraft(); update(true); }
+});
+$('snap').addEventListener('click', () => {
+  const s = current();
+  try {
+    const index = s.selectedGuide, old = s.guides[s.axis][index];
+    const edge = nearestEdge(edgeScores(s, s.axis), old);
+    if (edge === null) message('No strong contrast boundary within 24px. Place the guide manually.');
+    else { guide(selected, index, edge); update(true); message(`Guide ${index + 1} snapped from ${number(old)} to ${edge}px. This is a contrast suggestion; inspect the visible edge.`); }
+  } catch (error) { message(`Could not inspect pixels: ${error.message}`, true); }
+});
+$('zoom-in').addEventListener('click', () => views[selected].zoom(1.3)); $('zoom-out').addEventListener('click', () => views[selected].zoom(1 / 1.3));
+$('fit').addEventListener('click', () => views[selected].fit()); $('actual').addEventListener('click', () => { views[selected].actual(); message('1:1 view = one source-image pixel per browser CSS pixel. It does not set Android dp.'); });
+$('export-json').addEventListener('click', () => { try { exportJson(current()); message('JSON report prepared with source dimensions, boundaries and calibration. Browser download requested.'); } catch (error) { message(error.message, true); } });
+$('export-png').addEventListener('click', async () => {
+  const frozen = { ...current(), calibration: { ...current().calibration }, guides: { x: [...current().guides.x], y: [...current().guides.y] } };
+  busyCount++; update();
+  try { await exportPng(frozen); message('Annotated PNG prepared. Browser download requested; the original screenshot is unchanged.'); } catch (error) { message(error.message, true); } finally { busyCount--; update(); }
+});
+const area = $('canvas-area');
+area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('dropping'); });
+area.addEventListener('dragleave', e => { if (!area.contains(e.relatedTarget)) area.classList.remove('dropping'); });
+area.addEventListener('drop', e => { e.preventDefault(); area.classList.remove('dropping'); const file = e.dataTransfer.files[0]; if (file) openFile(file); });
+document.addEventListener('paste', e => {
+  if (['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName)) return;
+  const item = [...(e.clipboardData?.items || [])].find(item => item.type.startsWith('image/'));
+  if (item) { e.preventDefault(); openFile(item.getAsFile()); }
+});
+
+async function demo() {
+  const target = selected;
+  const c = document.createElement('canvas'); c.width = 768; c.height = 1380;
+  const g = c.getContext('2d'); g.scale(2, 2); g.fillStyle = '#111'; g.fillRect(0,0,384,690);
+  g.fillStyle = '#a39588'; g.font = '11px system-ui'; g.fillText('CALIBRATED EXAMPLE · 384dp wide', 22,35);
+  g.fillStyle = '#f7efe7'; g.font = 'bold 28px system-ui'; g.fillText('Account',22,80);
+  g.fillStyle = '#232323'; g.beginPath(); g.roundRect(16,100,352,72,24); g.fill();
+  g.beginPath(); g.roundRect(16,184,352,72,24); g.fill();
+  g.fillStyle = '#f5c04e'; g.font = '25px system-ui'; g.fillText('G',34,144); g.fillStyle = '#8e9bff'; g.fillText('+',35,229);
+  g.fillStyle = '#fff'; g.font = '16px system-ui'; g.fillText('Manage your account',70,142); g.fillText('Get a Plus plan',70,225);
+  g.fillStyle = '#a39588'; g.font = '12px system-ui'; g.fillText('The visible gap is exactly 12dp.',22,295); g.fillText('768 image pixels ÷ 384dp = 2px per dp.',22,320);
+  g.fillStyle = '#1a1613'; g.beginPath(); g.roundRect(16,365,352,250,22); g.fill();
+  g.fillStyle = '#ff7a3d'; g.font = 'bold 36px system-ui'; g.fillText('24px → 12dp',36,435);
+  g.fillStyle = '#cfc2b5'; g.font = '13px system-ui'; g.fillText('Try zooming. The measurement stays put.',36,472); g.fillText('Drag the guides or type exact coordinates.',36,497); g.fillText('Replace this with your own screenshot.',36,522);
+  const blob = await new Promise(resolve => c.toBlob(resolve, 'image/png'));
+  await openFile(new File([blob], 'example-384dp.png', { type:'image/png' }), target);
+  const s = slots[target];
+  if (s.name !== 'example-384dp.png') return;
+  s.calibration.widthDp = '384'; s.guides.y = [344,368]; update(true);
+  message('Known example: a 24px gap on a 768px-wide screenshot of a 384dp screen is exactly 12dp. Your own screenshot needs its own calibration.');
+}
+for (const id of ['demo','empty-demo']) $(id).addEventListener('click', demo);
+update(true);
+
+return Object.freeze({  });
+})();
+})();
+</script>
+</body>
+</html>

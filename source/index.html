@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#110e0c">
+  <meta name="description" content="A local screenshot ruler. Measure visible gaps in pixels and Android dp with explicit calibration.">
+  <title>Hearth · Screenshot ruler</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23ff7a3d'/%3E%3Cpath d='M18 18v28h28M18 25h8m-8 7h5m-5 7h8m6 7v-8m7 8v-5' fill='none' stroke='%23110e0c' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <svg class="icon-defs" aria-hidden="true"><defs>
+    <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M4 3v17h17M4 8h5M4 13h3M4 18h5M13 20v-5M18 20v-3"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5h16v-5"/></symbol>
+    <symbol id="i-fit" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M7 7h10v10H7z"/></symbol>
+    <symbol id="i-cross" viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 18v3h16v-3"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  </defs></svg>
+  <header class="app-header">
+    <a class="brand" href="./" aria-label="Hearth screenshot ruler"><span class="brand-mark"><svg><use href="#i-ruler"/></svg></span><span>hearth<span class="brand-sub">SCREENSHOT RULER</span></span></a>
+    <span class="privacy"><span class="status-dot"></span>Images stay in your browser</span>
+    <button class="quiet" id="demo">Try the 12dp example <svg><use href="#i-arrow"/></svg></button>
+  </header>
+  <main>
+    <div class="intro"><div><div class="eyebrow">FROM PIXELS TO LAYOUT</div><h1>Know the gap.</h1><p>Two guides. A screen width. A measurement you can explain.</p></div><div class="intro-note"><span class="number">01</span> Open a screenshot <span class="number">02</span> Calibrate <span class="number">03</span> Place the guides</div></div>
+    <div id="message" class="message" role="status" aria-live="polite" hidden></div>
+    <div class="workspace">
+      <section class="viewer" aria-label="Screenshot workspace">
+        <div class="viewer-toolbar">
+          <div class="source-tabs" role="group" aria-label="Active screenshot"><button id="source-a" class="source active" aria-pressed="true">A <span>Screenshot</span></button><button id="source-b" class="source" aria-pressed="false">B <span>Add another</span></button></div>
+          <div class="viewer-actions"><button class="quiet" id="open"><svg><use href="#i-upload"/></svg><span>Open image</span></button><button class="quiet" id="compare" aria-pressed="false" disabled>Compare A/B</button></div>
+        </div>
+        <div class="view-toolbar">
+          <div class="segmented" role="group" aria-label="Canvas tool"><button id="tool-guides" aria-pressed="true">Guides</button><button id="tool-pan" aria-pressed="false">Pan</button></div>
+          <div class="zoom-controls"><button id="zoom-out" aria-label="Zoom out" disabled>−</button><output id="zoom-label">Fit</output><button id="zoom-in" aria-label="Zoom in" disabled>+</button><button id="fit" aria-label="Fit screenshot" disabled><svg><use href="#i-fit"/></svg></button><button id="actual" disabled>1:1</button></div>
+        </div>
+        <div class="canvas-area" id="canvas-area">
+          <div class="canvas-pane" id="pane-a"><canvas id="canvas-a" aria-label="Screenshot A. Drag either guide, or use the coordinate fields." tabindex="0"></canvas><span class="pane-label" id="pane-label-a" hidden>A</span></div>
+          <div class="canvas-pane" id="pane-b" hidden><canvas id="canvas-b" aria-label="Screenshot B. Drag either guide, or use the coordinate fields." tabindex="0"></canvas><span class="pane-label" id="pane-label-b" hidden>B</span></div>
+          <div class="empty" id="empty"><span class="empty-mark"><svg><use href="#i-cross"/></svg></span><h2>Every pixel has a place.</h2><p>Drop a screenshot here, or choose one.<br>PNG, JPEG or WebP · up to 32MB / 20MP</p><button class="primary" id="empty-open"><svg><use href="#i-upload"/></svg>Choose screenshot</button><button class="text-button" id="empty-demo">Or explore a calibrated example</button></div>
+        </div>
+        <div class="viewer-footer"><span id="image-meta">No image selected</span><span id="gesture-hint">Drag guides · pinch or scroll to zoom</span></div>
+      </section>
+      <aside class="inspector" aria-label="Measurement controls">
+        <section class="result-card">
+          <div class="section-heading"><span class="eyebrow">VISIBLE DISTANCE</span><span class="source-chip" id="result-source">A</span></div>
+          <div class="result"><output id="result-dp">—</output><span>dp</span></div><div class="pixel-result"><output id="result-px">—</output> image px <span id="rounding"></span></div>
+          <div class="formula" id="formula">Open a screenshot to begin.</div>
+        </section>
+        <section class="control-section">
+          <div class="section-heading"><h2>Screen calibration</h2><span class="step-tag">01</span></div>
+          <label for="method">How do you know its scale?</label><select id="method"><option value="width">Screen width in dp · simplest</option><option value="dpi">Logical DPI + resize factor</option><option value="pixels">Pixels only · no dp calibration</option></select>
+          <div id="width-fields">
+            <label for="width-dp">Full captured screen width <span>dp</span></label><input id="width-dp" type="number" inputmode="decimal" min="1" max="10000" step="any" placeholder="e.g. 384" aria-describedby="width-help">
+            <p class="help" id="width-help">Use the width in dp of the screen when this screenshot was captured. In portrait, Developer options → Minimum width often matches it. Landscape and split screen need the actual captured width.</p>
+            <label class="checkbox"><input id="cropped" type="checkbox"><span>This image is a crop</span></label>
+            <div id="crop-fields" hidden><label for="reference-width">Full screenshot width at this resize scale <span>px</span></label><input id="reference-width" type="number" inputmode="decimal" min="1" step="any" placeholder="Width before cropping"><p class="help">Cropping alone keeps pixels the same size. If the crop was resized, enter the full screenshot width multiplied by that same resize factor.</p></div>
+          </div>
+          <div id="dpi-fields" hidden><label for="dpi">Screenshot device’s logical density <span>DPI</span></label><input id="dpi" type="number" inputmode="decimal" min="1" step="any" placeholder="e.g. 450"><p class="help caution">Minimum width 384dp is not 384 DPI. This browser’s pixel ratio is not the screenshot’s density.</p><label for="resize">Image resize factor <span>1 = unchanged</span></label><input id="resize" type="number" inputmode="decimal" min="0.001" step="any" value="1"><p class="help">Half size = 0.5. A crop with no resizing stays at 1. Stretched images need an undistorted source.</p></div>
+          <p class="calibration-state" id="calibration-state">No calibration yet.</p>
+        </section>
+        <section class="control-section">
+          <div class="section-heading"><h2>Two boundaries</h2><span class="step-tag">02</span></div>
+          <div class="segmented full" role="group" aria-label="Measurement direction"><button id="axis-y" aria-pressed="true">Vertical gap ↕</button><button id="axis-x" aria-pressed="false">Horizontal gap ↔</button></div>
+          <div class="guide-row"><span class="guide-dot one">1</span><label for="guide-1">Boundary 1 <span>image px</span></label><input id="guide-1" type="number" inputmode="decimal" step="any" disabled><button id="place-1" class="small" aria-label="Place boundary 1 on the image" disabled>Place</button></div>
+          <div class="guide-row"><span class="guide-dot two">2</span><label for="guide-2">Boundary 2 <span>image px</span></label><input id="guide-2" type="number" inputmode="decimal" step="any" disabled><button id="place-2" class="small" aria-label="Place boundary 2 on the image" disabled>Place</button></div>
+          <div class="nudge-row"><label for="selected-guide">Nudge</label><select id="selected-guide"><option value="0">Boundary 1</option><option value="1">Boundary 2</option></select><button id="nudge-minus" aria-label="Move selected boundary backward" disabled>−</button><button id="nudge-plus" aria-label="Move selected boundary forward" disabled>+</button><select id="nudge-unit" aria-label="Nudge increment"><option value="px">1px</option><option value="dp">1dp</option></select></div>
+          <button id="snap" class="outline full" disabled><svg><use href="#i-cross"/></svg>Snap selected guide to nearby edge</button><p class="help">Snap suggests the strongest contrast boundary within 24 source pixels, using the middle of the image. Inspect it; text, shadows and rounded corners can mislead.</p>
+        </section>
+        <section class="control-section export-section"><div class="section-heading"><h2>Keep the measurement</h2></div><div class="export-buttons"><button class="outline" id="export-png" disabled><svg><use href="#i-down"/></svg>Annotated PNG</button><button class="quiet" id="export-json" disabled>JSON report</button></div><p class="help">Images and guides live in this tab. Download a report before closing it.</p></section>
+      </aside>
+    </div>
+    <section class="comparison-summary" id="comparison-summary" hidden aria-label="Comparison results"><div><span class="eyebrow">COMPARE THE GAPS</span><h2>Two sources. Their own calibration.</h2></div><div id="comparison-values"></div></section>
+    <footer class="page-footer"><p>Measures visible bounds, not the spacer or padding declared in code. JPEG edges and supplied calibration affect accuracy.</p><a href="https://developer.android.com/training/multiscreen/screendensities" target="_blank" rel="noopener noreferrer">Android’s dp conversion <svg><use href="#i-arrow"/></svg></a></footer>
+  </main>
+  <input id="file-input" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+  <script type="module" src="src/app.mjs"></script>
+</body>
+</html>
