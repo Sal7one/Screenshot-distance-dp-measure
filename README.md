@@ -4,7 +4,10 @@ A browser screenshot ruler for measuring **visible spacing** in source pixels
 and Android dp. Open a screenshot, calibrate its scale, and put two guides on
 the boundaries you want to compare.
 
-**[Open the web app](https://sal7one.github.io/Screenshot-distance-dp-measure/)**
+**[Pages URL after setup](https://sal7one.github.io/Screenshot-distance-dp-measure/)**
+
+The code is published. Pages still needs an owner to enable it in repository
+settings; the available publishing credential cannot change those settings.
 
 ## One file, no backend
 
@@ -68,7 +71,7 @@ node --test source/tests/measurement.test.mjs
 python3 -m unittest discover -s tests -v
 python3 scripts/build.py
 python3 scripts/build.py --check
-python3 -m http.server 8768
+python3 -m http.server 8768 --bind 127.0.0.1
 ```
 
 Open `http://localhost:8768/`. A hosted site only needs `index.html` and
@@ -88,7 +91,8 @@ Open `http://localhost:8768/`. A hosted site only needs `index.html` and
 ## GitHub Pages
 
 In this repository, choose **Settings → Pages → Source → GitHub Actions**.
-The workflow deploys after a push to `main` or a manual run. Alternatively,
+Then choose **Actions → Test and deploy screenshot ruler → Run workflow → main**.
+Future pushes to `main` deploy automatically. Alternatively,
 choose **Deploy from a branch → main → / (root)**; the committed `index.html`
 is already built. Do not upload personal screenshots to the repository.
 

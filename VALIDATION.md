@@ -51,6 +51,18 @@ observed through that browser; it is not recorded as a passing browser check.
 
 ## Deployment
 
+Initial commit `234ff33` was pushed and its public contents verified. The
+[first GitHub Actions run](https://github.com/Sal7one/Screenshot-distance-dp-measure/actions/runs/37086172296)
+passed both test suites, generated-output verification and the static build on
+GitHub's runner. It failed at Pages configuration because the site is not enabled;
+no deployment or live-site journey is claimed. The saved publishing credential
+has push access but lacks repository administration/Pages setup access. The
+browser session is signed out, so it could not configure the setting either.
+
+The workflow keeps testing/building separate from deployment; Pages setup runs
+in the deployment job with its Pages permission. After enabling Pages, manually
+run the workflow once. See the README's setup steps.
+
 The Pages workflow tests and builds a clean `_site/` containing only the generated
 HTML and `.nojekyll`. Check the latest successful deployment in the repository's
 Actions tab; a git push alone is not evidence that Pages is live.
